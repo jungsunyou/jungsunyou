@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GR 운영 관리 시스템</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --color-text-primary:#1a1a1a;--color-text-secondary:#6b6b6b;--color-text-tertiary:#9a9a9a;
+  --color-background-primary:#fff;--color-background-secondary:#f5f5f4;
+  --color-border-tertiary:rgba(0,0,0,.12);--color-border-secondary:rgba(0,0,0,.25);
+  --color-background-info:#eff6ff;--color-text-info:#1d4ed8;
+  --border-radius-md:8px;--border-radius-lg:12px;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#e5e5e5;--color-text-secondary:#a0a0a0;--color-text-tertiary:#707070;
+    --color-background-primary:#1c1c1e;--color-background-secondary:#2c2c2e;
+    --color-border-tertiary:rgba(255,255,255,.12);--color-border-secondary:rgba(255,255,255,.25);
+    --color-background-info:#1e293b;--color-text-info:#60a5fa;
+  }
+}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary);background:var(--color-background-secondary);min-height:100vh}
+.wrap{max-width:800px;margin:0 auto;background:var(--color-background-primary);min-height:100vh}
+.topbar{display:flex;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--color-border-tertiary);gap:12px}
+.topbar-title{font-size:15px;font-weight:500;white-space:nowrap}
+.tr{display:flex;align-items:center;gap:10px;margin-left:auto}
+.dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block}
+.st{font-size:13px;font-weight:500;display:flex;align-items:center;gap:5px}
+.ib{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);font-size:18px;padding:4px;border-radius:var(--border-radius-md)}
+.ib:hover{background:var(--color-background-secondary)}
+.tabs{display:flex;gap:4px;padding:12px 16px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tab{padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;border-radius:var(--border-radius-md) var(--border-radius-md) 0 0;color:var(--color-text-secondary);border:none;background:none;display:flex;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent}
+.tab.on{background:var(--color-background-info);color:var(--color-text-info);border-radius:var(--border-radius-md)}
+.tab:hover:not(.on){background:var(--color-background-secondary)}
+.main{padding:16px}
+.sec-hd{font-size:14px;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.xbtn{margin-left:auto;font-size:12px;padding:5px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);cursor:pointer;color:var(--color-text-secondary);display:flex;align-items:center;gap:4px;-webkit-tap-highlight-color:transparent}
+.xbtn:hover{background:var(--color-background-secondary)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;min-height:70px}
+.card-hd{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:13px;font-weight:500;color:var(--color-text-secondary)}
+.cc{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);font-weight:500}
+.cc-b{background:#dbeafe;color:#1d4ed8}
+.cc-y{background:#fef3c7;color:#92400e}
+.cc-r{background:#fee2e2;color:#dc2626}
+.cc-g{background:#dcfce7;color:#15803d}
+.pls{display:flex;flex-wrap:wrap;gap:6px}
+.p{padding:5px 10px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;font-family:var(--font-mono);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .12s}
+.p:hover{opacity:.8}
+.p.sel{outline:2px solid var(--color-text-primary);outline-offset:1px}
+.pb{background:#3b82f6;color:#fff}
+.py{background:#f59e0b;color:#fff}
+.pr{background:#ef4444;color:#fff}
+.pmg{background:#22c55e;color:#fff}
+.mb{padding:5px 10px;border-radius:var(--border-radius-md);font-size:12px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.mb:hover{background:var(--color-border-tertiary)}
+.hp{margin-top:16px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.hp-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:14px;font-weight:500;flex-wrap:wrap}
+.mtag{font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md)}
+.hp-cl{margin-left:auto;cursor:pointer;background:none;border:none;font-size:18px;color:var(--color-text-secondary);padding:4px;border-radius:var(--border-radius-md)}
+.hp-cl:hover{background:var(--color-background-secondary)}
+.hp-bd{padding:4px 16px 12px}
+.hp-actions{display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap}
+.act-btn{font-size:12px;padding:7px 14px;border-radius:var(--border-radius-md);border:none;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent;transition:opacity .12s}
+.act-btn:hover{opacity:.85}
+.btn-maint{background:#22c55e;color:#fff}
+.btn-op{background:#3b82f6;color:#fff}
+.he{padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;line-height:1.6}
+.he:last-child{border-bottom:none}
+.hd{font-size:12px;color:var(--color-text-secondary);font-weight:500;display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.ht{font-size:10px;padding:2px 6px;border-radius:var(--border-radius-md)}
+.hi{background:var(--color-background-info);color:var(--color-text-info)}
+.hw{background:#fef3c7;color:#92400e}
+.hs{background:#dcfce7;color:#15803d}
+.hd2{background:#fee2e2;color:#dc2626}
+.empty{text-align:center;padding:32px 16px;color:var(--color-text-tertiary);font-size:13px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--color-text-primary);color:var(--color-background-primary);padding:10px 20px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99;white-space:nowrap}
+.toast.show{opacity:1}
+@media(min-width:580px){.cards{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:420px){.cards{grid-template-columns:1fr 1fr}.topbar-title{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="app"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const pl={E:[],D:[],X:[]};
+for(let i=1;i<=65;i++) pl.E.push('E'+String(i).padStart(3,'0'));
+for(let i=1;i<=20;i++) pl.D.push('D'+String(i).padStart(3,'0'));
+for(let i=1;i<=7;i++) pl.X.push('X'+String(i).padStart(3,'0'));
+const all=[...pl.E,...pl.D,...pl.X];
+const maint=new Set(['E249','E515','E352','E003','E085','D485']);
+
+const globalH=[
+  {d:'05/28 (목)',t:'i',tx:'승차장 수동 입고 — E: 10대 / D: 20대 / X: 7대'},
+  {d:'05/28 (목)',t:'i',tx:'하차장 수동입고 GR — E: 65대 / D: 10대'}
+];
+const specH={
+  'E249':[{d:'05/29',t:'w',tx:'액성캠오류 — 승차 1코스 기둥 제외'},{d:'05/29',t:'s',tx:'조치 완료, 투입 예정'}],
+  'E515':[{d:'05/29',t:'w',tx:'이머전시 버튼 파손 — 3코스 기둥 제외'},{d:'05/29',t:'s',tx:'조치 완료, 투입 예정'}],
+  'E352':[{d:'05/29',t:'d',tx:'앞·뒤 범퍼 파손 — 상부 제외'},{d:'05/29',t:'s',tx:'정비완료, 운영 복귀'}],
+  'E003':[{d:'05/29',t:'d',tx:'앞범퍼 파손 — 상부 제외'}],
+  'E085':[{d:'05/29',t:'d',tx:'앞범퍼 파손 — 상부 제외'}],
+  'D485':[{d:'05/29',t:'d',tx:'앞범퍼, 가이드센서 브라켓 파손 — 상부 제외'}]
+};
+function getH(p){return[...globalH,...(specH[p]||[])];}
+const tl={i:'입고',w:'이슈',s:'조치완료',d:'운행제외',mo:'운영 전환',mm:'정비 전환'};
+const tcl={i:'hi',w:'hw',s:'hs',d:'hd2',mo:'hi',mm:'hw'};
+const pColor={E:'b',D:'y',X:'r'};
+const ccMap={E:'b',D:'y',X:'r'};
+
+let tab='op',expanded=false,sel=null;
+
+function now(){const d=new Date();return String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function setMaint(p){if(maint.has(p))return;maint.add(p);if(!specH[p])specH[p]=[];specH[p].push({d:now(),t:'mm',tx:'수동 정비 전환'});toast(p+' → 정비중 전환');render();}
+function setOp(p){if(!maint.has(p))return;maint.delete(p);if(!specH[p])specH[p]=[];specH[p].push({d:now(),t:'mo',tx:'수동 운영 복귀'});toast(p+' → 운영중 전환');render();}
+
+function render(){
+  const active=all.filter(p=>!maint.has(p));
+  const maintL=all.filter(p=>maint.has(p));
+  const cats={
+    opE:{label:'GR-E',icon:'ti-car',items:pl.E.filter(p=>!maint.has(p)),prefix:'E'},
+    opD:{label:'GR-D',icon:'ti-car',items:pl.D.filter(p=>!maint.has(p)),prefix:'D'},
+    opX:{label:'GR-X',icon:'ti-car',items:pl.X.filter(p=>!maint.has(p)),prefix:'X'},
+    mt:{label:'정비중',icon:'ti-tool',items:maintL,prefix:'M'}
+  };
+  const isMt=sel&&maint.has(sel);
+  document.getElementById('app').innerHTML=`
+    <div class="topbar">
+      <span class="topbar-title"><i class="ti ti-car" style="font-size:16px;vertical-align:-2px;margin-right:4px"></i>GR 운영 관리 시스템</span>
+      <div class="tr">
+        <button class="ib"><i class="ti ti-refresh"></i></button>
+        <span class="st"><span class="dot"></span>운영중</span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab${tab==='op'?' on':''}" data-t="op"><i class="ti ti-dashboard" style="font-size:15px"></i>GR 상태</button>
+      <button class="tab${tab==='hist'?' on':''}" data-t="hist"><i class="ti ti-history" style="font-size:15px"></i>운영 히스토리</button>
+    </div>
+    <div class="main">${tab==='op'?`
+      <div class="sec-hd">
+        <span>GR 운영 현황 (${active.length}운영 / ${maintL.length}정비)</span>
+        <button class="xbtn" id="xb"><i class="ti ti-${expanded?'arrows-minimize':'arrows-maximize'}" style="font-size:14px"></i>${expanded?'접기':'펼치기'}</button>
+      </div>
+      <div class="cards">
+        ${Object.entries(cats).map(([k,v])=>{
+          const max=expanded?v.items.length:5;
+          const vis=v.items.slice(0,max);
+          const more=v.items.length-max;
+          const ccc=v.prefix==='M'?'g':ccMap[v.prefix];
+          return `<div class="card">
+            <div class="card-hd"><i class="ti ${v.icon}"></i>${v.label}<span class="cc cc-${ccc}">${v.items.length}</span></div>
+            <div class="pls">
+              ${vis.map(p=>`<span class="p ${v.prefix==='M'?'pmg':'p'+pColor[v.prefix]}${sel===p?' sel':''}" data-p="${p}">${p}</span>`).join('')}
+              ${more>0?`<span class="mb" data-ck="${k}">+${more}</span>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${sel?`<div class="hp">
+        <div class="hp-hd">
+          <i class="ti ti-history" style="font-size:17px"></i>
+          ${sel} 운영 히스토리
+          ${isMt?'<span class="mtag" style="background:#dcfce7;color:#15803d">정비중</span>':'<span class="mtag" style="background:#dbeafe;color:#1d4ed8">운영중</span>'}
+          <button class="hp-cl" id="hcl"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="hp-actions">
+          ${isMt
+            ?`<button class="act-btn btn-op" data-act="op" data-p="${sel}"><i class="ti ti-player-play" style="font-size:14px"></i>운영중으로 전환</button>`
+            :`<button class="act-btn btn-maint" data-act="mt" data-p="${sel}"><i class="ti ti-tool" style="font-size:14px"></i>정비중으로 전환</button>`
+          }
+        </div>
+        <div class="hp-bd">
+          ${getH(sel).map(h=>`<div class="he"><div class="hd">${h.d}<span class="ht ${tcl[h.t]}">${tl[h.t]}</span></div>${h.tx}</div>`).join('')}
+        </div>
+      </div>`:'<div class="empty"><i class="ti ti-pointer" style="font-size:16px;vertical-align:-2px;margin-right:4px"></i>GR 번호를 선택하면 히스토리가 표시됩니다</div>'}
+    `:`
+      <div class="sec-hd"><span>전체 운영 히스토리</span></div>
+      ${[
+        {d:'05/28 (목)',t:'i',tx:'승차장 수동 입고 — E: 10대 / D: 20대 / X: 7대'},
+        {d:'05/28 (목)',t:'i',tx:'하차장 수동입고 GR — E: 65대 / D: 10대'},
+        {d:'05/29',t:'w',tx:'E249 / 액성캠오류 / 승차 1코스 기둥 제외'},
+        {d:'05/29',t:'w',tx:'E515 / 이머전시 버튼 파손 / 3코스 기둥 제외'},
+        {d:'05/29',t:'s',tx:'E249, E515 조치되어 투입하겠습니다!'},
+        {d:'05/29',t:'d',tx:'E352 / 앞·뒤 범퍼 파손 / 상부 제외'},
+        {d:'05/29',t:'d',tx:'E003 / 앞범퍼 파손 / 상부 제외'},
+        {d:'05/29',t:'d',tx:'E085 / 앞범퍼 파손 / 상부 제외'},
+        {d:'05/29',t:'s',tx:'E352 정비완료 운영 복귀'},
+        {d:'05/29',t:'d',tx:'D485 / 앞범퍼, 가이드센서 브라켓 파손 / 상부 제외'}
+      ].map(h=>`<div class="he"><div class="hd">${h.d}<span class="ht ${tcl[h.t]}">${tl[h.t]}</span></div>${h.tx}</div>`).join('')}
+    `}</div>
+  `;
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{tab=t.dataset.t;render();});
+  document.querySelectorAll('.p').forEach(e=>e.onclick=()=>{sel=sel===e.dataset.p?null:e.dataset.p;render();});
+  document.querySelectorAll('.mb').forEach(e=>e.onclick=()=>{expanded=true;render();});
+  const xb=document.getElementById('xb');
+  if(xb) xb.onclick=()=>{expanded=!expanded;render();};
+  const hcl=document.getElementById('hcl');
+  if(hcl) hcl.onclick=()=>{sel=null;render();};
+  document.querySelectorAll('.act-btn').forEach(b=>b.onclick=()=>{b.dataset.act==='mt'?setMaint(b.dataset.p):setOp(b.dataset.p);});
+}
+render();
+</script>
+</body>
+</html>
