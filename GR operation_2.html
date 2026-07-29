@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GR 정비 관리 — 예제 화면</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+body{background:#f5f5f4;padding:28px;color:#1a1a1a}
+.cap{max-width:1180px;margin:0 auto}
+.topbar{display:flex;align-items:center;margin-bottom:18px}
+.title{font-size:22px;font-weight:700}
+.stpill{margin-left:auto;display:flex;align-items:center;gap:7px;background:#dcfce7;color:#15803d;font-size:15px;font-weight:600;padding:7px 16px;border-radius:20px}
+.dot{width:9px;height:9px;border-radius:50%;background:#22c55e}
+.panel{background:#fff;border:1px solid #ececec;border-radius:16px;padding:22px}
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:600;padding:11px 20px;border-radius:24px;cursor:pointer}
+.tab.on{background:#2563eb;color:#fff}
+.tab.off{color:#9a9a9a}
+.search{display:flex;gap:10px;margin-bottom:10px}
+.sbox{flex:1;display:flex;align-items:center;gap:10px;border:1px solid #e2e2e2;border-radius:12px;padding:0 16px;background:#fafafa}
+.sbox:focus-within{border-color:#2563eb;background:#fff}
+.sbox .ic{color:#9a9a9a;font-size:18px}
+.sbox input{flex:1;border:none;outline:none;background:transparent;font-size:16px;padding:14px 0}
+.sbtn{background:#2563eb;color:#fff;border:none;border-radius:12px;padding:0 22px;font-size:15px;font-weight:600;cursor:pointer}
+.sbtn:hover{background:#1d4ed8}
+.hint{font-size:13px;color:#9a9a9a;margin:0 0 20px 4px}
+.inhd{display:flex;align-items:center;margin-bottom:16px}
+.inhd h2{font-size:18px;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px}
+.card{border:1px solid #eee;border-radius:14px;padding:16px}
+.chd{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:600;color:#444;margin-bottom:14px}
+.cc{margin-left:auto;font-size:14px;font-weight:700;padding:3px 12px;border-radius:12px}
+.cc-a{background:#fef3c7;color:#92400e}.cc-g{background:#dcfce7;color:#15803d}.cc-b{background:#dbeafe;color:#1d4ed8}
+.pls{display:flex;flex-wrap:wrap;gap:10px}
+.p{font-size:15px;font-weight:600;padding:10px 0;width:82px;text-align:center;border-radius:12px;color:#fff;cursor:pointer;transition:opacity .12s}
+.p:hover{opacity:.82}
+.pa{background:#f59e0b}.pg{background:#22c55e}.pb{background:#3b82f6}
+.divider{height:1px;background:#f0f0f0;margin:22px 0}
+.result{margin-top:2px}
+.vhd{display:flex;align-items:center;gap:12px;padding:2px 2px 16px;flex-wrap:wrap}
+.vhd .no{font-size:22px;font-weight:700}
+.vtype{font-size:13px;font-weight:600;color:#555;background:#f1f1ef;padding:3px 10px;border-radius:8px}
+.badge{font-size:14px;font-weight:600;padding:4px 12px;border-radius:12px}
+.b-g{background:#dcfce7;color:#15803d}.b-b{background:#dbeafe;color:#1d4ed8}.b-a{background:#fef3c7;color:#92400e}.b-r{background:#fee2e2;color:#dc2626}
+.owner{margin-left:auto;font-size:14px;color:#555}.owner b{color:#1a1a1a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.stat{background:#f7f7f6;border-radius:12px;padding:12px 16px}
+.stat .l{font-size:12px;color:#8a8a8a;font-weight:600;margin-bottom:4px}
+.stat .v{font-size:18px;font-weight:700}
+.hlabel{font-size:14px;font-weight:700;color:#444;margin:4px 2px 14px}
+.tl{position:relative}
+.item{position:relative;padding:0 0 20px 26px;border-left:2px solid #eee;margin-left:5px}
+.item:last-child{border-left-color:transparent;padding-bottom:2px}
+.item .node{position:absolute;left:-8px;top:2px;width:14px;height:14px;border-radius:50%;background:#d5d5d5;border:3px solid #fff;box-shadow:0 0 0 1px #e2e2e2}
+.item.cur .node{background:#2563eb}
+.item.done .node{background:#22c55e}
+.irow{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.idate{font-size:14px;font-weight:700}
+.itag{font-size:12px;font-weight:600;padding:2px 9px;border-radius:8px}
+.iowner{font-size:12px;color:#9a9a9a;margin-left:auto}
+.iparts{margin:2px 0 4px}
+.chipm{display:inline-block;background:#f3f3f1;color:#333;font-size:12px;font-weight:600;padding:3px 9px;border-radius:8px;margin:2px 5px 2px 0}
+.iact{font-size:15px;line-height:1.5}
+.imeta{font-size:13px;color:#777;margin-top:5px;display:flex;gap:14px;flex-wrap:wrap}
+.imeta .ok{color:#15803d;font-weight:600}
+.empty{text-align:center;padding:40px 16px;color:#a5a5a5;font-size:15px}
+</style>
+</head>
+<body>
+<div class="cap">
+  <div class="topbar">
+    <div class="title">🔧 GR 운영 관리 시스템</div>
+    <div class="stpill"><span class="dot"></span>운영중</div>
+  </div>
+  <div class="panel">
+    <div class="tabs">
+      <div class="tab off">🚗 GR 상태</div>
+      <div class="tab off">🕘 운영 히스토리</div>
+      <div class="tab on">🔧 정비 관리</div>
+    </div>
+
+    <div class="search">
+      <label class="sbox"><span class="ic">🔍</span>
+        <input id="q" placeholder="차량 번호로 검색 (예: X981, E578, D507)" autocomplete="off">
+      </label>
+      <button class="sbtn" id="go">검색</button>
+    </div>
+    <div class="hint">차량 번호를 검색하거나 아래 현황에서 차량을 클릭하면, 해당 차량의 정비 이력을 볼 수 있습니다.</div>
+
+    <div class="inhd"><h2>정비 현황 (3 정비중 / 2 대기 / 5 완료·오늘)</h2></div>
+    <div class="cards">
+      <div class="card"><div class="chd">🕓 정비 대기<span class="cc cc-a">2</span></div>
+        <div class="pls"><span class="p pa" data-no="E299">E299</span><span class="p pa" data-no="D515">D515</span></div></div>
+      <div class="card"><div class="chd">🔧 정비 중<span class="cc cc-g">3</span></div>
+        <div class="pls"><span class="p pg" data-no="X981">X981</span><span class="p pg" data-no="E578">E578</span><span class="p pg" data-no="X515">X515</span></div></div>
+      <div class="card"><div class="chd">✅ 오늘 완료<span class="cc cc-b">5</span></div>
+        <div class="pls"><span class="p pb" data-no="D507">D507</span><span class="p pb" data-no="X902">X902</span><span class="p pb" data-no="D516">D516</span><span class="p pb" data-no="E065">E065</span></div></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+const TAG={정비중:'b-g',완료:'b-b',대기:'b-a',운행제외:'b-r'};
+const carts={
+  X981:{type:'GR-X',status:'정비중',history:[
+    {date:'2026-07-13',st:'정비중',parts:['앞범퍼','앞좌/우프레임','푸쉬로드'],act:'앞범퍼 교환 · 앞우프레임 용접 · 볼트/조인트 교환 · 판금',owner:'김OO',verify:'시운전 이상무',extra:'편제동 판금 전 좌105/우23 → 후 좌62/우67',photos:2},
+    {date:'2026-06-20',st:'완료',parts:['고프로'],act:'고프로 재부팅 · C타입 케이블 접불조치',owner:'이OO',verify:'영상테스트 이상무',photos:0},
+    {date:'2026-05-11',st:'완료',parts:['뒷범퍼','프레임'],act:'뒷범퍼 판금 · 프레임 용접',owner:'김OO',verify:'시운전 이상무',photos:1},
+  ]},
+  E578:{type:'GR-E',status:'정비중',history:[
+    {date:'2026-07-13',st:'정비중',parts:['고프로','랜케이블'],act:'고프로 배터리 교체 · 라우터 랜케이블 접불조치',owner:'이OO',verify:'영상테스트 이상무',photos:0},
+    {date:'2026-04-30',st:'완료',parts:['고프로'],act:'고프로 충전선 접촉불량 · 고무패킹 고정',owner:'이OO',verify:'영상테스트 이상무',photos:0},
+  ]},
+  X515:{type:'GR-X',status:'정비중',history:[
+    {date:'2026-07-12',st:'정비중',parts:['뒷범퍼','프레임'],act:'뒷범퍼 판금 · 뒷범퍼 프레임 판금 용접',owner:'김OO',verify:'—',photos:1},
+  ]},
+  D507:{type:'GR-D',status:'완료',history:[
+    {date:'2026-07-12',st:'완료',parts:[],act:'정비완료 운영복귀',owner:'박OO',verify:'—',photos:0},
+    {date:'2026-06-02',st:'완료',parts:['가이드센서'],act:'가이드센서 전압 조정 6.2V→6.5V',owner:'이OO',verify:'시운전 이상무',photos:0},
+  ]},
+  E299:{type:'GR-E',status:'대기',history:[
+    {date:'2026-07-14',st:'대기',parts:['앞범퍼'],act:'앞범퍼 소음 — 점검 대기',owner:'—',verify:'—',photos:0},
+  ]},
+  D515:{type:'GR-D',status:'대기',history:[
+    {date:'2026-07-14',st:'대기',parts:['머드가드'],act:'앞좌 머드가드 이물질 — 점검 대기',owner:'—',verify:'—',photos:0},
+  ]},
+};
+
+function render(no){
+  const el=document.getElementById('result');
+  const key=(no||'').trim().toUpperCase();
+  if(!key){el.innerHTML='<div class="empty">🔍 차량 번호를 검색하면 정비 이력이 표시됩니다.</div>';return;}
+  const c=carts[key];
+  if(!c){el.innerHTML='<div class="empty">🔍 '+key+' — 정비 이력이 없습니다. (예: X981, E578, X515, D507)</div>';return;}
+  const parts={};c.history.forEach(h=>h.parts.forEach(p=>parts[p]=(parts[p]||0)+1));
+  const top=Object.entries(parts).sort((a,b)=>b[1]-a[1])[0];
+  const items=c.history.map((h,i)=>{
+    const cls=(i===0&&h.st==='정비중')?'cur':(h.st==='완료'?'done':'');
+    return '<div class="item '+cls+'"><span class="node"></span>'
+      +'<div class="irow"><span class="idate">'+h.date+'</span><span class="itag '+TAG[h.st]+'">'+h.st+'</span><span class="iowner">담당 '+h.owner+'</span></div>'
+      +(h.parts.length?'<div class="iparts">'+h.parts.map(p=>'<span class="chipm">'+p+'</span>').join('')+'</div>':'')
+      +'<div class="iact">'+h.act+'</div>'
+      +'<div class="imeta">'+(h.extra?'<span>📐 '+h.extra+'</span>':'')+(h.verify&&h.verify!=='—'?'<span class="ok">✅ '+h.verify+'</span>':'')+(h.photos?'<span>📷 사진 '+h.photos+'</span>':'')+'</div>'
+      +'</div>';
+  }).join('');
+  el.innerHTML=
+    '<div class="vhd"><span class="no">'+key+'</span><span class="vtype">'+c.type+'</span>'
+    +'<span class="badge '+TAG[c.status]+'">현재 '+c.status+'</span></div>'
+    +'<div class="stats">'
+    +'<div class="stat"><div class="l">누적 정비</div><div class="v">'+c.history.length+'건</div></div>'
+    +'<div class="stat"><div class="l">최근 정비일</div><div class="v">'+c.history[0].date+'</div></div>'
+    +'<div class="stat"><div class="l">최다 발생 부위</div><div class="v">'+(top?top[0]+' ('+top[1]+')':'—')+'</div></div>'
+    +'</div>'
+    +'<div class="hlabel">정비 이력</div><div class="tl">'+items+'</div>';
+}
+document.getElementById('go').onclick=function(){render(document.getElementById('q').value);};
+document.getElementById('q').addEventListener('keydown',function(e){if(e.key==='Enter')render(e.target.value);});
+document.querySelectorAll('.p').forEach(function(p){p.onclick=function(){document.getElementById('q').value=p.dataset.no;render(p.dataset.no);};});
+render('X981'); // 기본 예시
+</script>
+</body>
+</html>
